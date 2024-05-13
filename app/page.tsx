@@ -1,9 +1,7 @@
-import {Room} from "./Room";
-
 export default function Page() {
     return (
-      <Room>
-          <h1></h1>
-      </Room>
+      <div className="w-full h-[100vh] text-center flex justify-center items-center">
+          <h1 className="text-2xl text-white "> LiveBlocks Figma clone</h1>
+      </div>
     );
 }
