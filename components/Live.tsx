@@ -16,6 +16,13 @@ const Live = () => {
   });
 
   const broadcast = useBroadcastEvent();
+
+  useInterval(() => {
+    setReactions((reaction) => reaction.filter((r) =>
+      r.timestamp > Date.now() - 400,
+      ));
+  }, 1000);
+
   useInterval(() => {
     if (cursorState.mode === CursorMode.Reaction && cursorState.isPressed && cursor) {
       setReactions((reactions) => reactions.concat({
@@ -108,6 +115,7 @@ const Live = () => {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [updateMyPresence]);
+
   useEventListener((eventData) => {
     const event = eventData.event as ReactionEvent;
     setReactions((reactions) => reactions.concat({
@@ -116,6 +124,7 @@ const Live = () => {
       timestamp: Date.now(),
     }));
   });
+
   return (
     <div
       onPointerMove={handelPointerMove}
