@@ -7,7 +7,10 @@ import ReactionSelector from "@/components/reaction/ReactionButton";
 import FlyingReaction from "@/components/reaction/FlyingReaction";
 import useInterval from "@/hooks/useInterval";
 
-const Live = () => {
+type Props = {
+  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
+}
+const Live = ({ canvasRef }: Props) => {
   const [reactions, setReactions] = useState<Reaction[]>([]);
   const others = useOthers();
   const [{ cursor }, updateMyPresence] = useMyPresence() as any;
@@ -20,7 +23,7 @@ const Live = () => {
   useInterval(() => {
     setReactions((reaction) => reaction.filter((r) =>
       r.timestamp > Date.now() - 400,
-      ));
+    ));
   }, 1000);
 
   useInterval(() => {
@@ -127,13 +130,14 @@ const Live = () => {
 
   return (
     <div
+      id="canvas"
       onPointerMove={handelPointerMove}
       onPointerDown={handelPointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handelPointerLeave}
       className="w-full h-[100vh] text-center flex justify-center items-center"
     >
-      <h1 className="text-2xl text-white "> LiveBlocks Figma clone</h1>
+      <canvas ref={canvasRef} />
 
       {
         reactions.map((reaction) => (
