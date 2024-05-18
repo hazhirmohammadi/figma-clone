@@ -5,22 +5,14 @@ import Navbar from "@/components/Navbar";
 import LeftSidebar from "@/components/LeftSidebar";
 import RightSideBar from "@/components/RightSideBar";
 import { useEffect, useRef, useState } from "react";
-import {
-  handleCanvaseMouseMove,
-  handleCanvasMouseDown,
-  handleCanvasMouseUp, handleCanvasObjectModified,
-  handleResize,
-  initializeFabric, renderCanvas,
-} from "@/lib/canvas";
+import { handleCanvasMouseDown, handleResize, initializeFabric } from "@/lib/canvas";
 import { ActiveElement } from "@/types/type";
-import { useMutation, useStorage } from "@/liveblocks.config";
 
 export default function Page() {
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fabricRef = useRef<fabric.canvas | null>(null);
   const isDrawing = useRef(false);
-  const activeObjectRef = useRef<fabric.object | null>(null);
+
   const [activeElement, setActiveElement] = useState<ActiveElement>({
     name: "",
     value: "",
@@ -33,19 +25,6 @@ export default function Page() {
 
   const shapeRef = useRef<fabric.object | null>(null);
   const selectedShapeRef = useRef<string | null>("rectangle");
-
-  const canvasObjects = useStorage((root) => root.canvasObjects);
-  const syncShapeInStorage = useMutation(({ storage }, object) => {
-    if (!object) return;
-    const { objectId } = object;
-
-    const shapeData = object.toJSON();
-    shapeData.objectId = objectId;
-
-    const canvasObjects = storage.get("canvasObjects");
-    canvasObjects.set(objectId, shapeData);
-
-  }, []);
 
   useEffect(() => {
     const canvas = initializeFabric({ canvasRef, fabricRef });
@@ -60,54 +39,15 @@ export default function Page() {
           selectedShapeRef,
         });
     });
-    canvas.on("mouse:move", (options: any) => {
-      handleCanvaseMouseMove(
-        {
-          options,
-          canvas,
-          isDrawing,
-          shapeRef,
-          selectedShapeRef,
-          syncShapeInStorage,
-        });
-    });
-    canvas.on("mouse:move", (options: any) => {
-      handleCanvasMouseUp(
-        {
-          options,
-          canvas,
-          isDrawing,
-          shapeRef,
-          selectedShapeRef,
-          syncShapeInStorage,
-          setActiveElement,
-          activeObjectRef,
-        });
-    });
-
-    canvas.on("object:up", (options) => {
-      handleCanvasObjectModified({
-        options,
-        syncShapeInStorage,
-      });
-    });
     window.addEventListener("resize", () => {
       // handleResize({fabricRef})
     });
   }, []);
-
-  useEffect(() => {
-    renderCanvas({
-      fabricRef,
-      canvasObjects,
-      activeObjectRef,
-    });
-  }, [canvasObjects]);
   return (
     <main className="h-screen overflow-hidden ">
       <Navbar
-        activeElement={activeElement}
-        handleActiveElement={handleActiveElement}
+      activeElement={activeElement}
+      handleActiveElement={handleActiveElement}
       />
       <section className="flex h-full flex-row">
         <LeftSidebar />
