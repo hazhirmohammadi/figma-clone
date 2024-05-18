@@ -14,6 +14,8 @@ import {
 } from "@/lib/canvas";
 import { ActiveElement } from "@/types/type";
 import { useMutation, useStorage } from "@/liveblocks.config";
+import { defaultNavElement } from "@/constants";
+import { handleDelete } from "@/lib/key-events";
 
 export default function Page() {
 
@@ -26,9 +28,41 @@ export default function Page() {
     value: "",
     icon: "",
   });
+
+  const deleteAllShapes = useMutation(({ storage }) => {
+    const canvasObjects = storage.get("canvasObjects");
+    if (!canvasObjects || canvasObjects.size === 0) return true;
+
+    for (const [key, value] of canvasObjects.entries()) {
+      canvasObjects.delete(key);
+    }
+
+    return canvasObjects.size === 0;
+  }, []);
+
+  const deleteShapeFromStorage = useMutation(({ storage }, objectId) => {
+    const canvasObjects = storage.get("canvasObjects");
+
+    canvasObjects.delete(objectId);
+  });
   const handleActiveElement = (elm: ActiveElement) => {
     setActiveElement(elm);
     selectedShapeRef.current = elm?.value as String;
+
+    switch (elm?.value) {
+      case "reset":
+        deleteAllShapes();
+        fabricRef.current?.clear();
+        setActiveElement(defaultNavElement);
+        break;
+      case "delete":
+        handleDelete(fabricRef.current as any, deleteShapeFromStorage);
+        setActiveElement(defaultNavElement);
+      default:
+        break;
+
+
+    }
   };
 
   const shapeRef = useRef<fabric.object | null>(null);
@@ -84,16 +118,20 @@ export default function Page() {
           activeObjectRef,
         });
     });
-
     canvas.on("object:up", (options) => {
       handleCanvasObjectModified({
         options,
         syncShapeInStorage,
       });
     });
+
     window.addEventListener("resize", () => {
       // handleResize({fabricRef})
     });
+
+    return ()=>{
+      canvas.dispose()
+    }
   }, []);
 
   useEffect(() => {
