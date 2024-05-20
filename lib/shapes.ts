@@ -91,11 +91,11 @@ export const createSpecificShape = (
 };
 
 export const handleImageUpload = ({
-  file,
-  canvas,
-  shapeRef,
-  syncShapeInStorage,
-}: ImageUpload) => {
+                                    file,
+                                    canvas,
+                                    shapeRef,
+                                    syncShapeInStorage,
+                                  }: ImageUpload) => {
   const reader = new FileReader();
 
   reader.onload = () => {
@@ -132,12 +132,12 @@ export const createShape = (
 };
 
 export const modifyShape = ({
-  canvas,
-  property,
-  value,
-  activeObjectRef,
-  syncShapeInStorage,
-}: ModifyShape) => {
+                              canvas,
+                              property,
+                              value,
+                              activeObjectRef,
+                              syncShapeInStorage,
+                            }: ModifyShape) => {
   const selectedElement = canvas.getActiveObject();
 
   if (!selectedElement || selectedElement?.type === "activeSelection") return;
@@ -145,7 +145,7 @@ export const modifyShape = ({
   // if  property is width or height, set the scale of the selected element
   if (property === "width") {
     selectedElement.set("scaleX", 1);
-    selectedElement.set("width", value);  
+    selectedElement.set("width", value);
   } else if (property === "height") {
     selectedElement.set("scaleY", 1);
     selectedElement.set("height", value);
@@ -161,10 +161,10 @@ export const modifyShape = ({
 };
 
 export const bringElement = ({
-  canvas,
-  direction,
-  syncShapeInStorage,
-}: ElementDirection) => {
+                               canvas,
+                               direction,
+                               syncShapeInStorage,
+                             }: ElementDirection) => {
   if (!canvas) return;
 
   // get the selected element. If there is no selected element or there are more than one selected element, return

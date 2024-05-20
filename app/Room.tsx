@@ -1,15 +1,25 @@
 "use client";
 
-import { ReactNode } from "react";
-import { RoomProvider } from "@/liveblocks.config";
+import { LiveMap } from "@liveblocks/client";
 import { ClientSideSuspense } from "@liveblocks/react";
 
-export function Room({ children }: { children: ReactNode }) {
-    return (
-      <RoomProvider id="my-room" initialPresence={{}}>
-          <ClientSideSuspense fallback={<div>Loading…</div>}>
-              {() => children}
-          </ClientSideSuspense>
-      </RoomProvider>
-    );
+import Loader from "@/components/Loader";
+import { RoomProvider } from "@/liveblocks.config";
+
+const Room = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <RoomProvider
+      id="fig-room"
+      initialPresence={{ cursor: null, cursorColor: null, editingText: null }}
+      initialStorage={{
+        canvasObjects: new LiveMap(),
+      }}
+    >
+      <ClientSideSuspense fallback={<Loader />}>
+        {() => children}
+      </ClientSideSuspense>
+    </RoomProvider>
+  );
 }
+
+export default Room;
