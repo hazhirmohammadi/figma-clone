@@ -69,7 +69,6 @@ const Home = () => {
     stroke: "#aabbcc",
   });
 
-
   const deleteShapeFromStorage = useMutation(({ storage }, shapeId) => {
 
     const canvasObjects = storage.get("canvasObjects");
@@ -81,15 +80,18 @@ const Home = () => {
     // get the canvasObjects store
     const canvasObjects = storage.get("canvasObjects");
 
+    // if the store doesn't exist or is empty, return
     if (!canvasObjects || canvasObjects.size === 0) return true;
 
-    // @ts-ignore
+    // delete all the shapes from the store
     for (const [key, value] of canvasObjects.entries()) {
       canvasObjects.delete(key);
     }
 
+    // return true if the store is empty
     return canvasObjects.size === 0;
   }, []);
+
 
   const syncShapeInStorage = useMutation(({ storage }, object) => {
     // if the passed object is null, return
@@ -112,19 +114,25 @@ const Home = () => {
     switch (elem?.value) {
       // delete all the shapes from the canvas
       case "reset":
+        // clear the storage
         deleteAllShapes();
+        // clear the canvas
         fabricRef.current?.clear();
+        // set "select" as the active element
         setActiveElement(defaultNavElement);
         break;
 
       // delete the selected shape from the canvas
       case "delete":
+        // delete it from the canvas
         handleDelete(fabricRef.current as any, deleteShapeFromStorage);
+        // set "select" as the active element
         setActiveElement(defaultNavElement);
         break;
 
       // upload an image to the canvas
       case "image":
+        // trigger the click event on the input element which opens the file dialog
         imageInputRef.current?.click();
 
         isDrawing.current = false;
@@ -153,6 +161,7 @@ const Home = () => {
       fabricRef,
     });
 
+
     canvas.on("mouse:down", (options) => {
       handleCanvasMouseDown({
         options,
@@ -162,6 +171,7 @@ const Home = () => {
         shapeRef,
       });
     });
+
 
     canvas.on("mouse:move", (options) => {
       handleCanvaseMouseMove({
@@ -173,6 +183,7 @@ const Home = () => {
         syncShapeInStorage,
       });
     });
+
 
     canvas.on("mouse:up", () => {
       handleCanvasMouseUp({
@@ -252,6 +263,8 @@ const Home = () => {
       })
     );
 
+    // dispose the canvas and remove the event listeners when the component unmounts
+    return () => {
 
       canvas.dispose();
 
@@ -273,9 +286,8 @@ const Home = () => {
         })
       );
     };
-  }, [canvasRef]); // run this effect only once when the component mounts and the canvasRef changes
+  }, [canvasRef]);
 
-  // render the canvas when the canvasObjects from live storage changes
   useEffect(() => {
     renderCanvas({
       fabricRef,
