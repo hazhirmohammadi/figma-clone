@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -8,12 +9,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dro
 import { Button } from "./ui/button";
 
 const ShapesMenu = ({
-  item,
-  activeElement,
-  handleActiveElement,
-  handleImageUpload,
-  imageInputRef,
-}: ShapesMenuProps) => {
+                      item,
+                      activeElement,
+                      handleActiveElement,
+                      handleImageUpload,
+                      imageInputRef,
+                    }: ShapesMenuProps) => {
   const isDropdownElem = item.value.some((elem) => elem?.value === activeElement.value);
 
   return (

@@ -1,11 +1,14 @@
-import React from "react";
-import { LiveCursorProps } from "@/types/type";
-import Cursor from "@/components/cursor/Cursor";
-import { COLORS } from "@/constants";
 
-const LiveCursor = ({ others }: LiveCursorProps) => {
- return  others.map(({ connectionId, presence }) => {
-    if (!presence?.cursor) return null;
+import Cursor from "./Cursor";
+import { COLORS } from "@/constants";
+import { LiveCursorProps } from "@/types/type";
+
+const LiveCursors = ({ others }: LiveCursorProps) => {
+  return others.map(({ connectionId, presence }) => {
+    if (presence == null || !presence?.cursor) {
+      return null;
+    }
+
     return (
       <Cursor
         key={connectionId}
@@ -18,4 +21,4 @@ const LiveCursor = ({ others }: LiveCursorProps) => {
   });
 };
 
-export default LiveCursor;
+export default LiveCursors;
