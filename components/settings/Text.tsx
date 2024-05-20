@@ -34,15 +34,15 @@ type TextProps = {
 };
 
 const Text = ({
-  fontFamily,
-  fontSize,
-  fontWeight,
-  handleInputChange,
-}: TextProps) => (
-  <div className='flex flex-col gap-3 border-b border-primary-grey-200 px-5 py-3'>
-    <h3 className='text-[10px] uppercase'>Text</h3>
+                fontFamily,
+                fontSize,
+                fontWeight,
+                handleInputChange,
+              }: TextProps) => (
+  <div className="flex flex-col gap-3 border-b border-primary-grey-200 px-5 py-3">
+    <h3 className="text-[10px] uppercase">Text</h3>
 
-    <div className='flex flex-col gap-3'>
+    <div className="flex flex-col gap-3">
       {RenderSelect({
         config: selectConfigs[0],
         fontSize,
@@ -51,7 +51,7 @@ const Text = ({
         handleInputChange,
       })}
 
-      <div className='flex gap-2'>
+      <div className="flex gap-2">
         {selectConfigs.slice(1).map((config) =>
           RenderSelect({
             config,
@@ -59,7 +59,7 @@ const Text = ({
             fontWeight,
             fontFamily,
             handleInputChange,
-          })
+          }),
         )}
       </div>
     </div>
@@ -79,12 +79,12 @@ type Props = {
 };
 
 const RenderSelect = ({
-  config,
-  fontSize,
-  fontWeight,
-  fontFamily,
-  handleInputChange,
-}: Props) => (
+                        config,
+                        fontSize,
+                        fontWeight,
+                        fontFamily,
+                        handleInputChange,
+                      }: Props) => (
   <Select
     key={config.property}
     onValueChange={(value) => handleInputChange(config.property, value)}
@@ -96,7 +96,7 @@ const RenderSelect = ({
           : fontWeight
     }
   >
-    <SelectTrigger className='no-ring w-full rounded-sm border border-primary-grey-200'>
+    <SelectTrigger className="no-ring w-full rounded-sm border border-primary-grey-200">
       <SelectValue
         placeholder={
           config.property === "fontFamily"
@@ -107,12 +107,12 @@ const RenderSelect = ({
         }
       />
     </SelectTrigger>
-    <SelectContent className='border-primary-grey-200 bg-primary-black text-primary-grey-300'>
+    <SelectContent className="border-primary-grey-200 bg-primary-black text-primary-grey-300">
       {config.options.map((option) => (
         <SelectItem
           key={option.value}
           value={option.value}
-          className=' hover:bg-primary-green hover:text-primary-black'
+          className=" hover:bg-primary-green hover:text-primary-black"
         >
           {option.label}
         </SelectItem>
